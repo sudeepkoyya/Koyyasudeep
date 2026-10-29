@@ -36,3 +36,15 @@ Import this repository in Vercel. The project is static: select **Other** as fra
 
 ## Limitations
 Classroom/exhibition simulation only. It does not use real traffic sensors, validated signal timing, live maps, or certified safety logic. Never connect it to real traffic infrastructure.
+
+## Deploy with GitHub Pages
+1. Open **Settings → Pages** in this repository.
+2. Under **Build and deployment**, choose **Deploy from a branch**.
+3. Select branch **main** and folder **/(root)**, then save.
+4. Once GitHub finishes deployment, open: https://sudeepkoyya.github.io/Koyyasudeep/
+
+## Project submission checklist
+- Explain the six finite states and the transition function.
+- Demonstrate manual stepping, automatic cycle, queue inputs, emergency request, and the event log.
+- State clearly that all inputs are simulated and the prototype does not control real traffic signals.
+

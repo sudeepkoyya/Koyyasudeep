@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08131d"><meta name="description" content="EcoSphereX environmental intelligence dashboard demo">
+<title>EcoSphereX | Environmental Intelligence</title>
+<link rel="stylesheet" href="./styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+  <a class="brand" href="#"><span class="brand-mark">E</span><span><b>EcoSphereX</b><small>ENVIRONMENTAL INTELLIGENCE</small></span></a>
+  <div class="nav-label">WORKSPACE</div>
+  <a class="nav active" href="#overview">▦ <span>Overview</span></a>
+  <a class="nav" href="#analytics">⌁ <span>Analytics</span></a>
+  <a class="nav" href="#alerts">♧ <span>Alert center</span><i id="nav-alert-count">2</i></a>
+  <div class="side-bottom"><span class="pulse"></span><div><b>Demo system online</b><small>Simulated data stream</small></div></div>
+</aside>
+<main class="main">
+  <header class="topbar"><div><p class="eyebrow">ENVIRONMENTAL MONITORING / OVERVIEW</p><h1>Environmental overview</h1><p class="muted">Understand the environment around you, at a glance.</p></div><div class="top-actions"><span class="demo-tag"><span class="pulse"></span> DEMO MODE</span><span class="date" id="clock">Updating…</span></div></header>
+  <section class="notice"><span>ⓘ</span><div><b>Simulation mode</b><p>Values refresh automatically for demonstration. They are not measurements from physical sensors.</p></div><span class="live-pill">AUTO-REFRESH</span></section>
+  <section class="kpis" id="overview">
+    <article class="kpi"><div class="kpi-head"><span>Air quality index</span><span class="iconbox mint">◉</span></div><div class="metric"><strong id="aqi">42</strong><span class="unit">AQI</span></div><div class="trend good" id="aqi-status">● Good conditions</div><div class="mini-track"><span id="aqi-bar" style="width:24%"></span></div></article>
+    <article class="kpi"><div class="kpi-head"><span>Noise level</span><span class="iconbox blue">≋</span></div><div class="metric"><strong id="noise">48</strong><span class="unit">dB</span></div><div class="trend" id="noise-status">Within typical range</div><div class="mini-track"><span id="noise-bar" style="width:48%"></span></div></article>
+    <article class="kpi"><div class="kpi-head"><span>Soil pH</span><span class="iconbox violet">⌁</span></div><div class="metric"><strong id="ph">6.7</strong><span class="unit">pH</span></div><div class="trend" id="ph-status">Slightly acidic</div><div class="mini-track"><span id="ph-bar" style="width:56%"></span></div></article>
+    <article class="kpi"><div class="kpi-head"><span>Temperature</span><span class="iconbox amber">☼</span></div><div class="metric"><strong id="temp">29.4</strong><span class="unit">°C</span></div><div class="trend">Ambient estimate</div><div class="mini-track"><span id="temp-bar" style="width:62%"></span></div></article>
+  </section>
+  <section class="content-grid" id="analytics">
+    <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">TREND ANALYSIS</p><h2>Environmental signals</h2><p class="muted">Simulated readings over the last 12 intervals</p></div><select id="chart-metric" aria-label="Chart metric"><option value="aqi">Air quality (AQI)</option><option value="noise">Noise (dB)</option><option value="temp">Temperature (°C)</option></select></div><div class="chart-wrap"><canvas id="trend-chart"></canvas></div><div class="chart-foot"><span><i class="legend-dot"></i> Sample readings</span><span id="last-updated">Last refreshed just now</span></div></article>
+    <article class="panel zones-panel"><div class="panel-heading"><div><p class="eyebrow">MONITORING NETWORK</p><h2>Monitoring zones</h2></div><span class="count-pill">03 ZONES</span></div>
+      <div class="zone"><span class="zone-icon">⌂</span><div class="zone-main"><b>Urban Green Zone</b><small>Air quality monitor</small><div class="zone-bar"><span style="width:27%"></span></div></div><span class="status good-text">Good</span></div>
+      <div class="zone"><span class="zone-icon blue">▤</span><div class="zone-main"><b>Community Hub</b><small>Noise monitoring</small><div class="zone-bar"><span class="yellow-fill" style="width:54%"></span></div></div><span class="status warn-text">Moderate</span></div>
+      <div class="zone"><span class="zone-icon violet">♧</span><div class="zone-main"><b>Test Garden</b><small>Soil condition monitor</small><div class="zone-bar"><span style="width:64%"></span></div></div><span class="status good-text">Stable</span></div>
+      <div class="zone-summary"><span class="pulse"></span> 3 of 3 demo zones reporting</div>
+    </article>
+  </section>
+  <section class="panel alerts-panel" id="alerts"><div class="panel-heading"><div><p class="eyebrow">ATTENTION REQUIRED</p><h2>Environmental alert center</h2><p class="muted">Rule-based demo alerts from the simulated stream.</p></div><span class="count-pill" id="alert-count">2 ACTIVE</span></div><div id="alerts-list" class="alerts-list"></div></section>
+  <footer><span>EcoSphereX · Environmental Intelligence Dashboard</span><span>Prototype build 0.1 · <b>Simulated data</b></span></footer>
+</main></div>
+<script src="./script.js"></script>
+</body></html>

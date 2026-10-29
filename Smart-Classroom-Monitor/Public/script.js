@@ -396,3 +396,39 @@ fetchCurrent();
 setInterval(fetchCurrent,2000);
 setInterval(fetchAlerts,30000);
 setInterval(loadThresholds,60000);
+
+
+// CAMPUS-WIDE LIVE-UPDATING DEMO DATA
+// Replace these simulated values with real occupancy/energy APIs or sensor feeds for production use.
+var campusTick=0;
+var campusZones=[
+  {name:'Engineering Block',type:'ACADEMIC',capacity:520,base:286,temp:28.1,air:342,phase:0.4},
+  {name:'Central Library',type:'LEARNING',capacity:360,base:214,temp:26.8,air:298,phase:1.8},
+  {name:'Admin Block',type:'ADMINISTRATION',capacity:180,base:96,temp:27.2,air:315,phase:3.1},
+  {name:'Cafeteria',type:'STUDENT SERVICES',capacity:260,base:172,temp:29.3,air:418,phase:4.2}
+];
+function refreshCampusOverview(){
+  campusTick++;
+  var totalOccupancy=0, power=0, alertCount=0;
+  var html=campusZones.map(function(z,i){
+    var occupancy=Math.max(0,Math.min(z.capacity,Math.round(z.base+Math.sin(campusTick/5+z.phase)*18+Math.cos(campusTick/8+i)*7)));
+    var temp=Number((z.temp+Math.sin(campusTick/9+z.phase)*.7).toFixed(1));
+    var air=Math.round(z.air+Math.sin(campusTick/7+z.phase)*24);
+    var utilization=Math.round(occupancy/z.capacity*100);
+    var warning=temp>=30||air>=450||utilization>=90;
+    totalOccupancy+=occupancy;
+    power+=12.5+(utilization/100)*8+(temp>28?2.4:0);
+    if(warning) alertCount++;
+    return '<article class="building-card"><div class="building-top"><div><div class="building-type">'+z.type+'</div><h3>'+z.name+'</h3></div><span class="building-status '+(warning?'status-warn':'status-good')+'">'+(warning?'CHECK ZONE':'NORMAL')+'</span></div><div class="building-stats"><div><span>Occupancy</span><strong>'+occupancy+'</strong></div><div><span>Temperature</span><strong>'+temp+'°C</strong></div><div><span>Air index</span><strong>'+air+'</strong></div></div><div class="occupancy-track"><span style="width:'+utilization+'%;'+(utilization>=90?'background:linear-gradient(90deg,#ffd166,#ff8a65)':'')+'"></span></div><div class="building-foot"><span>Capacity utilization</span><strong>'+utilization+'%</strong></div></article>';
+  }).join('');
+  var grid=document.getElementById('building-grid');
+  if(grid) grid.innerHTML=html;
+  var occ=document.getElementById('campus-occupancy'); if(occ) occ.innerHTML=totalOccupancy.toLocaleString()+' <small>people</small>';
+  var watts=84.6+Math.sin(campusTick/6)*5.2+Math.cos(campusTick/11)*2.3;
+  var pwr=document.getElementById('campus-power'); if(pwr) pwr.innerHTML=watts.toFixed(1)+' <small>kW</small>';
+  var online=document.getElementById('campus-online'); if(online) online.innerHTML=(12-(campusTick%29===0?1:0))+' <small>/ 12</small>';
+  var alerts=document.getElementById('campus-alert-count'); if(alerts) alerts.innerHTML=alertCount+' <small>items</small>';
+  var updated=document.getElementById('campus-updated'); if(updated) updated.textContent=new Date().toLocaleTimeString();
+}
+refreshCampusOverview();
+setInterval(refreshCampusOverview,4000);

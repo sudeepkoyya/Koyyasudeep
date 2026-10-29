@@ -84,6 +84,8 @@ async function fetchCurrent(){
     setGauge('hum',d.hum,limits.hum,0,100,'%');
     setGauge('air',d.air,limits.air,0,1000,' idx');
     document.getElementById('last-update').textContent=new Date().toLocaleTimeString();
+    var mode=document.getElementById('data-mode');
+    if(mode) mode.textContent=d.demo ? 'DEMO DATA' : 'SENSOR DATA';
     
     var now=Math.floor(Date.now()/1000);
     liveBuffer.push({t:now,temp:d.temp,hum:d.hum,air:d.air});
@@ -121,7 +123,20 @@ async function fetchCurrent(){
       pushAlert('🌫️','Poor Air Quality: '+d.air+' (Limit: '+limits.air+')',ts);
     }
 
-  }catch(e){ /* silent */ }
+  }catch(e){
+    // Static hosting without serverless APIs still shows clearly simulated sample values.
+    var minute=Math.floor(Date.now()/60000);
+    var demo={temp:Number((27.5+Math.sin(minute/8)*1.8).toFixed(1)),hum:Number((59+Math.sin(minute/11)*5).toFixed(1)),air:Math.round(345+Math.cos(minute/7)*45)};
+    setGauge('temp',demo.temp,limits.temp,0,50,'°C');
+    setGauge('hum',demo.hum,limits.hum,0,100,'%');
+    setGauge('air',demo.air,limits.air,0,1000,' idx');
+    var mode=document.getElementById('data-mode');
+    if(mode) mode.textContent='DEMO DATA';
+    document.getElementById('last-update').textContent=new Date().toLocaleTimeString();
+    liveBuffer.push({t:Math.floor(Date.now()/1000),temp:demo.temp,hum:demo.hum,air:demo.air});
+    if(liveBuffer.length>180) liveBuffer.shift();
+    if(activeRange==='live') renderChart(liveBuffer);
+  }
 }
 
 // ALERT LOG
@@ -375,8 +390,9 @@ function demoHistory(range){
 // INIT
 loadThresholds();
 fetchAlerts();
+histData=demoHistory('hour');
+renderChart(histData);
 fetchCurrent();
-renderChart(liveBuffer);
 setInterval(fetchCurrent,2000);
 setInterval(fetchAlerts,30000);
 setInterval(loadThresholds,60000);

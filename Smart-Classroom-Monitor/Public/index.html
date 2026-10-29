@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Smart Classroom Environment Monitoring system</title>
+<title>CampusPulse | Campus Monitoring Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="styles.css"/>
@@ -14,10 +14,10 @@
   <div class="brand">
     <div class="brand-pulse"></div>
 
-    <h1>Smart Classroom Environment Monitoring system</h1>
+    <h1>CampusPulse · Campus Monitoring</h1>
   </div>
   <div class="header-meta">
-    <span class="meta-chip live">&#9679; LIVE</span>
+    <span class="meta-chip live">&#9679; AUTO-REFRESH</span>
     <span class="meta-chip" id="data-mode">DEMO DATA</span>
     <span class="meta-chip" id="last-update">--:--:--</span>
     <span id="clock"></span>
@@ -25,6 +25,25 @@
 </header>
 
 <main>
+
+  <div class="campus-heading">
+    <div><div class="eyebrow">CAMPUS OPERATIONS CENTER</div><h2>Campus at a glance</h2><p>Building health, occupancy and utilities in one view.</p></div>
+    <div class="demo-note"><span class="demo-pulse"></span> LIVE-UPDATING DEMO · NOT PHYSICAL SENSOR DATA</div>
+  </div>
+  <div class="campus-kpis">
+    <article class="campus-kpi"><div class="kpi-label">Estimated occupancy</div><div class="kpi-value" id="campus-occupancy">1,248 <small>people</small></div><div class="kpi-foot"><span class="kpi-dot cyan"></span>Across monitored zones</div></article>
+    <article class="campus-kpi"><div class="kpi-label">Power demand</div><div class="kpi-value" id="campus-power">84.6 <small>kW</small></div><div class="kpi-foot"><span class="kpi-dot lime"></span>Simulated live load</div></article>
+    <article class="campus-kpi"><div class="kpi-label">Zones online</div><div class="kpi-value" id="campus-online">12 <small>/ 12</small></div><div class="kpi-foot"><span class="kpi-dot lime"></span>Demo connectivity status</div></article>
+    <article class="campus-kpi"><div class="kpi-label">Attention needed</div><div class="kpi-value" id="campus-alert-count">2 <small>items</small></div><div class="kpi-foot"><span class="kpi-dot amber"></span>Simulated campus alerts</div></article>
+  </div>
+  <div class="sec-title">Building Status</div>
+  <div class="building-grid" id="building-grid">
+    <article class="building-card"><div class="building-top"><div><div class="building-type">ACADEMIC</div><h3>Engineering Block</h3></div><span class="building-status status-good">NORMAL</span></div><div class="building-stats"><div><span>Occupancy</span><strong>--</strong></div><div><span>Temperature</span><strong>--°C</strong></div><div><span>Air index</span><strong>--</strong></div></div><div class="occupancy-track"><span style="width:60%"></span></div><div class="building-foot"><span>Capacity utilization</span><strong>--%</strong></div></article>
+    <article class="building-card"><div class="building-top"><div><div class="building-type">LEARNING</div><h3>Central Library</h3></div><span class="building-status status-good">NORMAL</span></div><div class="building-stats"><div><span>Occupancy</span><strong>--</strong></div><div><span>Temperature</span><strong>--°C</strong></div><div><span>Air index</span><strong>--</strong></div></div><div class="occupancy-track"><span style="width:60%"></span></div><div class="building-foot"><span>Capacity utilization</span><strong>--%</strong></div></article>
+    <article class="building-card"><div class="building-top"><div><div class="building-type">ADMINISTRATION</div><h3>Admin Block</h3></div><span class="building-status status-good">NORMAL</span></div><div class="building-stats"><div><span>Occupancy</span><strong>--</strong></div><div><span>Temperature</span><strong>--°C</strong></div><div><span>Air index</span><strong>--</strong></div></div><div class="occupancy-track"><span style="width:60%"></span></div><div class="building-foot"><span>Capacity utilization</span><strong>--%</strong></div></article>
+    <article class="building-card"><div class="building-top"><div><div class="building-type">STUDENT SERVICES</div><h3>Cafeteria</h3></div><span class="building-status status-good">NORMAL</span></div><div class="building-stats"><div><span>Occupancy</span><strong>--</strong></div><div><span>Temperature</span><strong>--°C</strong></div><div><span>Air index</span><strong>--</strong></div></div><div class="occupancy-track"><span style="width:60%"></span></div><div class="building-foot"><span>Capacity utilization</span><strong>--%</strong></div></article>
+  </div>
+  <div class="campus-updated">Demo values refresh automatically · Last campus refresh: <strong id="campus-updated">--:--:--</strong></div>
 
   <!-->>>>>Gauges<<<<<-->
   <div class="sec-title">Live Sensor Readings</div>

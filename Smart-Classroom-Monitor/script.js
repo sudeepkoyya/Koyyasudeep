@@ -73,6 +73,32 @@ function updateExhaustLED(on){
   document.getElementById('ex-toggle').checked=on;
 }
 
+// Exhaust automation: activate for high humidity OR poor air quality.
+// Hysteresis prevents rapid ON/OFF switching near the thresholds.
+function applyExhaustAutomation(reading, ts){
+  var humidityHigh=Number(reading.hum)>limits.hum;
+  var airHigh=Number(reading.air)>limits.air;
+  var humidityNormal=Number(reading.hum)<=limits.hum-5;
+  var airNormal=Number(reading.air)<=limits.air-30;
+
+  if(humidityHigh || airHigh){
+    if(!exhaustOn){
+      exhaustOn=true;
+      updateExhaustLED(true);
+      var reason=airHigh?'Poor Air Quality: '+reading.air:
+        'High Humidity: '+Number(reading.hum).toFixed(1)+'%';
+      pushAlert('🌀','Exhaust AUTO ON — '+reason,ts);
+    }
+  } else if(humidityNormal && airNormal && exhaustOn){
+    exhaustOn=false;
+    updateExhaustLED(false);
+    pushAlert('🌀','Exhaust AUTO OFF — Air and humidity back to normal',ts);
+  }
+
+  if(humidityHigh) pushAlert('💧','High Humidity: '+Number(reading.hum).toFixed(1)+'% (Limit: '+limits.hum+'%)',ts);
+  if(airHigh) pushAlert('🌫️','Poor Air Quality: '+reading.air+' (Limit: '+limits.air+')',ts);
+}
+
 // FETCH CURRENT
 async function fetchCurrent(){
   try{
@@ -106,17 +132,8 @@ async function fetchCurrent(){
       pushAlert('❄️','AC AUTO OFF — Temp normal: '+d.temp.toFixed(1)+'°C',ts);
     }
 
-    // HUMIDITY check → Exhaust auto ON
-    if(d.hum>limits.hum){
-      if(!exhaustOn){
-        exhaustOn=true; updateExhaustLED(true);
-        pushAlert('🌀','Exhaust AUTO ON — High Humidity: '+d.hum.toFixed(1)+'%',ts);
-      }
-      pushAlert('💧','High Humidity: '+d.hum.toFixed(1)+'% (Limit: '+limits.hum+'%)',ts);
-    } else if(d.hum<=limits.hum-5 && exhaustOn){
-      exhaustOn=false; updateExhaustLED(false);
-      pushAlert('🌀','Exhaust AUTO OFF — Humidity normal: '+d.hum.toFixed(1)+'%',ts);
-    }
+    // Humidity OR poor air quality controls the exhaust fan.
+    applyExhaustAutomation(d,ts);
 
     // AIR check
     if(d.air>limits.air){
@@ -126,10 +143,11 @@ async function fetchCurrent(){
   }catch(e){
     // Static hosting without serverless APIs still shows clearly simulated sample values.
     var minute=Math.floor(Date.now()/60000);
-    var demo={temp:Number((27.5+Math.sin(minute/8)*1.8).toFixed(1)),hum:Number((59+Math.sin(minute/11)*5).toFixed(1)),air:Math.round(345+Math.cos(minute/7)*45)};
+    var demo={temp:Number((27.5+Math.sin(minute/8)*1.8).toFixed(1)),hum:Number((68+Math.sin(minute/11)*12).toFixed(1)),air:Math.round(450+Math.cos(minute/7)*100)};
     setGauge('temp',demo.temp,limits.temp,0,50,'°C');
     setGauge('hum',demo.hum,limits.hum,0,100,'%');
     setGauge('air',demo.air,limits.air,0,1000,' idx');
+    applyExhaustAutomation(demo,new Date().toLocaleTimeString());
     var mode=document.getElementById('data-mode');
     if(mode) mode.textContent='DEMO DATA';
     document.getElementById('last-update').textContent=new Date().toLocaleTimeString();
